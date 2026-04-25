@@ -6,6 +6,10 @@ Install the stable `shac` formula:
 brew install Neftedollar/shac/shac
 ```
 
-The formula points to stable tagged releases from:
+The formula always points to stable tagged releases from:
 
 https://github.com/Neftedollar/sh-autocomplete
+
+---
+
+Beta feedback / bugs → https://github.com/Neftedollar/sh-autocomplete/discussions
