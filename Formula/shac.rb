@@ -13,6 +13,18 @@ class Shac < Formula
     pkgshare.install "shell"
   end
 
+  def post_install
+    # Restart the daemon if it is already registered with launchd, so the new
+    # binary is picked up immediately after upgrade. Skipped on fresh install
+    # (launchd entry doesn't exist yet). The user still needs `exec $SHELL` in
+    # open sessions to refresh _shac_client_version.
+    if system("launchctl", "list", "homebrew.mxcl.shac", out: IO::NULL, err: IO::NULL)
+      system "#{HOMEBREW_PREFIX}/bin/brew", "services", "restart", "shac"
+    end
+  rescue StandardError
+    nil
+  end
+
   service do
     run [opt_bin/"shacd"]
     keep_alive true
