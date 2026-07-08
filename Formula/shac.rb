@@ -1,28 +1,42 @@
 class Shac < Formula
   desc "Local shell autocomplete engine for bash, zsh, and fish"
   homepage "https://github.com/Neftedollar/sh-autocomplete"
-  url "https://github.com/Neftedollar/sh-autocomplete/archive/refs/tags/v0.6.1.tar.gz"
-  sha256 "10f2f68c009337fda35a556d2b696321d84e10a5f7fe66b4e0b8d86a3fe98f11"
+  version "0.6.2"
   license "MIT"
-  head "https://github.com/Neftedollar/sh-autocomplete.git", branch: "main"
 
-  depends_on "rust" => :build
-
-  def install
-    system "cargo", "install", *std_cargo_args(path: ".")
-    pkgshare.install "shell"
+  # Binary-install formula: downloads the prebuilt release tarball and installs
+  # the binaries directly — no Rust/LLVM build toolchain is pulled for a normal
+  # `brew install`. The macOS asset is a universal binary (arm64 + x86_64), so a
+  # single url covers both Apple Silicon and Intel.
+  #
+  # CI (`.github/scripts/render_tap_formula.py`, run by release.yml) injects the
+  # release-specific url + sha256 into the tap copy of this formula at tag time.
+  # The url/sha256 committed here are the last-released values and serve as the
+  # rendering template; they are not consumed by a normal tap install.
+  on_macos do
+    url "https://github.com/Neftedollar/sh-autocomplete/releases/download/v0.6.2/shac-macos-universal.tar.gz"
+    sha256 "1798f39474a7c722142b8437a6870836ee391f35997bf92f89469ba3b1c85810"
   end
 
-  def post_install
-    # Restart the daemon if it is already registered with launchd, so the new
-    # binary is picked up immediately after upgrade. Skipped on fresh install
-    # (launchd entry doesn't exist yet). The user still needs `exec $SHELL` in
-    # open sessions to refresh _shac_client_version.
-    if system("launchctl", "list", "homebrew.mxcl.shac", out: IO::NULL, err: IO::NULL)
-      system "#{HOMEBREW_PREFIX}/bin/brew", "services", "restart", "shac"
+  on_linux do
+    url "https://github.com/Neftedollar/sh-autocomplete/releases/download/v0.6.2/shac-linux-x86_64.tar.gz"
+    sha256 "6519a5d619f4b2d62319169fcfbf59edf712a91bdc08e725f7a82df68006633d"
+  end
+
+  # `brew install --HEAD shac` still builds from source; only that opt-in path
+  # needs the Rust toolchain.
+  head do
+    url "https://github.com/Neftedollar/sh-autocomplete.git", branch: "main"
+    depends_on "rust" => :build
+  end
+
+  def install
+    if build.head?
+      system "cargo", "install", *std_cargo_args(path: ".")
+    else
+      bin.install "bin/shac", "bin/shacd"
     end
-  rescue StandardError
-    nil
+    pkgshare.install "shell"
   end
 
   service do
