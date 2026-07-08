@@ -1,7 +1,7 @@
 class Shac < Formula
   desc "Local shell autocomplete engine for bash, zsh, and fish"
   homepage "https://github.com/Neftedollar/sh-autocomplete"
-  version "0.6.5"
+  version "0.6.6"
   license "MIT"
 
   # Binary-install formula: downloads the prebuilt release tarball and installs
@@ -14,13 +14,13 @@ class Shac < Formula
   # The url/sha256 committed here are the last-released values and serve as the
   # rendering template; they are not consumed by a normal tap install.
   on_macos do
-    url "https://github.com/Neftedollar/sh-autocomplete/releases/download/v0.6.5/shac-macos-universal.tar.gz"
-    sha256 "74543ec23eed62474d02247455ac7ac9ff6ce27aaefaa1d10ffdb434552a0db0"
+    url "https://github.com/Neftedollar/sh-autocomplete/releases/download/v0.6.6/shac-macos-universal.tar.gz"
+    sha256 "804e576d54ed3ee5f46b444fec5b3a06f95af2fa4783c2d8a26e2c687c2ad90d"
   end
 
   on_linux do
-    url "https://github.com/Neftedollar/sh-autocomplete/releases/download/v0.6.5/shac-linux-x86_64.tar.gz"
-    sha256 "363b8d895e0097008507cbd452aa3b2902f441a02594795d2cf6bebfca268b26"
+    url "https://github.com/Neftedollar/sh-autocomplete/releases/download/v0.6.6/shac-linux-x86_64.tar.gz"
+    sha256 "53e8f1c956bdc52acbdc2e6109b0fcadb534d80f1c8f773ce3e7d04a34c12db1"
   end
 
   # `brew install --HEAD shac` still builds from source; only that opt-in path
